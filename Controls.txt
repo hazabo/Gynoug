@@ -1,0 +1,2 @@
+Arrow keys to move
+X to shoot
