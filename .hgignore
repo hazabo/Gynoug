@@ -1,0 +1,5 @@
+syntax: glob
+bin/
+proj\vs2013\SpaceInvaders.opensdf
+proj\vs2013\SpaceInvaders.sdf
+proj/

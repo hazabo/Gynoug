@@ -1,0 +1,1 @@
+Fixed bug with visual studios, fixed scores not resetting

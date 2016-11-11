@@ -1,0 +1,318 @@
+#include "Application.h"
+#include "Gynoug.h"
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/ext.hpp>
+
+#include "Player.h"
+#include "Enemy.h"
+#include "Ball Enemy.h"
+#include "Chasing Enemy.h"
+#include "Eye Enemy.h"
+#include "Falling Enemy.h"
+#include "Palm Tree Enemy.h"
+#include "Shark Enemy.h"
+#include "Star Enemy.h"
+#include "Stone Enemy.h"
+#include "Volcano Enemy.h"
+#include "Volcano Projectile.h"
+
+
+
+
+//This is an example of a complex #define that obfuscates the entry point of the application
+//APPLICATION_ENTRY can be found in Application.h it is a define that hides the main() entry point
+//of the application. This is done so that each application can be called and run in the same manner
+//it is not something that needs to be fully understood until much later in the CGP course.
+
+APPLICATION_ENTRY(Gynoug);
+
+//A default constructor for Gynoug() and it's accompanying destructor ~FrameworkTest()
+//Any initialisation could be placed in here, these are empty for now. They are here to ensure that
+//the correct application creation sequence is called.
+Gynoug::Gynoug(){}
+Gynoug::~Gynoug(){}
+
+//onCreate is a function that is called once on the creation of the application. This is where items 
+//that will last for the duration of the application should be created. EG Player sprites
+bool Gynoug::onCreate(int a_argc, char* a_argv[])
+{
+	Application::GetScreenSize(m_iScreenWidth, m_iScreenHeight);
+	Application::SetBackgroundColor(UG::SColour(0x00, 0x00, 0x00, 0xFF));
+	Application::AddFont("./fonts/invaders.fnt");
+	//\Now lets create the sprite for our players cannon. That's right in space invaders we control a cannon
+	//\So lets create that with an appropriate variable name and move it to a suitable location (say the middle of our screen)
+	m_iGameClock = 0.f;
+	m_iTrigger = 0;
+	m_iCurrentBallEnemies = 0;
+	m_iCurrentChasingEnemies = 0;
+	m_iCurrentEyeEnemies = 0;
+	m_iCurrentFallingEnemies = 0;
+	m_iCurrentPalmTreeEnemies = 0;
+	m_iCurrentSharkEnemies = 0;
+	m_iCurrentStarEnemies = 0;
+	m_iCurrentStoneEnemies = 0;
+	m_iCurrentVolcanoEnemies = 0;
+	m_iCurrentVolcanoProjectiles = 0;
+
+	m_pPlayer = new Player();
+	m_pPlayer->SetPosition(Vector2(m_iScreenWidth * 0.1f, m_iScreenHeight * 0.5f));
+	/*int Health =1;
+	m_pBallEnemies[0] = new BallEnemy();
+	m_pBallEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pBallEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pBallEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pBallEnemies[0]->SetHealth(Health);
+
+	m_pChasingEnemies[0] = new ChasingEnemy();
+	m_pChasingEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pChasingEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pChasingEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pChasingEnemies[0]->SetHealth(Health);
+	
+	m_pEyeEnemies[0] = new EyeEnemy();
+	m_pEyeEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pEyeEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pEyeEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pEyeEnemies[0]->SetHealth(Health);
+	
+	m_pFallingEnemies[0] = new FallingEnemy();
+	m_pFallingEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pFallingEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pFallingEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pFallingEnemies[0]->SetHealth(Health);
+	
+	m_pPalmTreeEnemies[0] = new PalmTreeEnemy();
+	m_pPalmTreeEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pPalmTreeEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pPalmTreeEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pPalmTreeEnemies[0]->SetHealth(Health);
+	
+	m_pSharkEnemies[0] = new SharkEnemy();
+	m_pSharkEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pSharkEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pSharkEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pSharkEnemies[0]->SetHealth(Health);
+	
+	m_pStarEnemies[0] = new StarEnemy();
+	m_pStarEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pStarEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pStarEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pStarEnemies[0]->SetHealth(Health);
+	
+	m_pStoneEnemies[0] = new StoneEnemy();
+	m_pStoneEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pStoneEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pStoneEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pStoneEnemies[0]->SetHealth(Health);
+	
+	m_pVolcanoEnemies[0] = new VolcanoEnemy();
+	m_pVolcanoEnemies[0]->SetPosition(Vector2(0, 0));
+	m_pVolcanoEnemies[0]->SetVelocity(Vector2(100, 100));
+	m_pVolcanoEnemies[0]->SetAcceleration(Vector2(0, -30));
+	m_pVolcanoEnemies[0]->SetHealth(Health);
+	
+	m_pVolcanoProjectiles[0] = new VolcanoProjectile();
+	m_pVolcanoProjectiles[0]->SetPosition(Vector2(0, 0));
+	m_pVolcanoProjectiles[0]->SetVelocity(Vector2(100, 100));
+	m_pVolcanoProjectiles[0]->SetAcceleration(Vector2(0, -30));
+	m_pVolcanoProjectiles[0]->SetHealth(Health);
+	*/
+	return true;
+}
+
+//onUpdate - this function is called each frame of the application, the a_deltaTime variable is a floating point value
+//that gives the length of time that has passed since the previous frame was rendered.
+void Gynoug::onUpdate(float a_deltaTime)
+{
+	for (int i = 0; i <= 3;i++)
+		if ((m_iTrigger == i) && (m_iGameClock > (2.7 + (i*0.3))))
+		{
+			m_iTrigger++;
+			float a_Width = 0.f;
+			int Health = 2;
+			m_pBallEnemies[i] = new BallEnemy();
+			m_iCurrentBallEnemies++;
+			m_pBallEnemies[i]->GetWidth(a_Width);
+			m_pBallEnemies[i]->SetPosition(Vector2(m_iScreenWidth + a_Width, m_iScreenHeight*0.8f));
+			m_pBallEnemies[i]->SetVelocity(Vector2(-100, 0));
+			m_pBallEnemies[i]->SetAcceleration(Vector2(0, 0));
+			m_pBallEnemies[i]->SetHealth(Health);
+		}
+	/*
+	for (int i = 4; i <= 8;i++)
+		if ((m_iTrigger == i) && (m_iGameClock > (4.5 + (i*0.3))))
+		{
+			m_iTrigger++;
+			float a_Width = 0.f;
+			int Health = 2;
+			m_pBallEnemies[i] = new BallEnemy();
+			m_iCurrentBallEnemies++;
+			m_pBallEnemies[i]->GetWidth(a_Width);
+			m_pBallEnemies[i]->SetPosition(Vector2(m_iScreenWidth + a_Width, m_iScreenHeight*0.2f));
+			m_pBallEnemies[i]->SetVelocity(Vector2(100, 0));
+			m_pBallEnemies[i]->SetAcceleration(Vector2(0, 0));
+			m_pBallEnemies[i]->SetHealth(Health);
+		}*/
+
+	m_pPlayer->Update(a_deltaTime);
+	for (int i = 0; i <= m_iCurrentBallEnemies - 1; i++)
+	{
+		m_pBallEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentChasingEnemies-1; i++)
+	{
+		m_pChasingEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentEyeEnemies-1; i++)
+	{
+		m_pEyeEnemies[0]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentFallingEnemies-1; i++)
+	{
+		m_pFallingEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentPalmTreeEnemies-1; i++)
+	{
+		m_pPalmTreeEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentSharkEnemies-1; i++)
+	{
+		m_pSharkEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentStarEnemies-1; i++)
+	{
+		m_pStarEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentStoneEnemies-1; i++)
+	{
+		m_pStoneEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentVolcanoEnemies-1; i++)
+	{
+		m_pVolcanoEnemies[i]->Update(a_deltaTime);
+	}
+	for (int i = 0; i <= m_iCurrentVolcanoProjectiles-1; i++)
+	{
+		m_pVolcanoProjectiles[i]->Update(a_deltaTime);
+	}
+	
+
+	// quit our application when escape is pressed
+	if (Application::IsKeyDown(UG::KEY_ESCAPE))
+		destroy();
+	m_iGameClock += a_deltaTime;
+}
+
+//onDraw is called each frame after onUpdate has been called
+//this is where any rendering should be carried out
+void Gynoug::onDraw()
+{
+	Application::ClearScreen();
+	Application::SetFont("./fonts/invaders.fnt");
+	Application::DrawString("HI-SCORE", (int)(m_iScreenWidth * 0.4f), m_iScreenHeight - 2, 1.f);
+	Application::DrawString("CREDIT", (int)(m_iScreenWidth * 0.65f), 38);
+	Application::DrawLine(0, 40, m_iScreenWidth, 40, UG::SColour(0x00, 0xFC, 0x00, 0xFF));
+	Application::SetFont(nullptr);
+	m_pPlayer->Draw();
+	for (int i = 0; i <= m_iCurrentBallEnemies - 1; i++)
+	{
+		m_pBallEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentChasingEnemies - 1; i++)
+	{
+		m_pChasingEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentEyeEnemies - 1; i++)
+	{
+		m_pEyeEnemies[0]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentFallingEnemies - 1; i++)
+	{
+		m_pFallingEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentPalmTreeEnemies - 1; i++)
+	{
+		m_pPalmTreeEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentSharkEnemies - 1; i++)
+	{
+		m_pSharkEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentStarEnemies - 1; i++)
+	{
+		m_pStarEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentStoneEnemies - 1; i++)
+	{
+		m_pStoneEnemies[i]-> Draw();
+	}
+	for (int i = 0; i <= m_iCurrentVolcanoEnemies - 1; i++)
+	{
+		m_pVolcanoEnemies[i]->Draw();
+	}
+	for (int i = 0; i <= m_iCurrentVolcanoProjectiles - 1; i++)
+	{
+		m_pVolcanoProjectiles[i]->Draw();
+	}
+	
+
+}
+
+//onDestroy - this will be called at the termination of the application. Any items which need to be
+//deallocated should be done so in here. E.G things that were created in the onCreate function.
+void Gynoug::onDestroy()
+{
+	delete m_pPlayer;
+	while (m_iCurrentBallEnemies > 0)
+	{
+		delete m_pBallEnemies[m_iCurrentBallEnemies-1];
+		m_iCurrentBallEnemies--;
+	}
+	while (m_iCurrentChasingEnemies > 0)
+	{
+		delete m_pChasingEnemies[m_iCurrentChasingEnemies - 1];
+		m_iCurrentChasingEnemies--;
+	}
+	while (m_iCurrentEyeEnemies > 0)
+	{
+		delete m_pEyeEnemies[m_iCurrentEyeEnemies - 1];
+		m_iCurrentEyeEnemies--;
+	}
+	while (m_iCurrentFallingEnemies > 0)
+	{
+		delete m_pFallingEnemies[m_iCurrentFallingEnemies - 1];
+		m_iCurrentFallingEnemies--;
+	}
+	while (m_iCurrentPalmTreeEnemies > 0)
+	{
+		delete m_pPalmTreeEnemies[m_iCurrentPalmTreeEnemies - 1];
+		m_iCurrentPalmTreeEnemies--;
+	}
+	while (m_iCurrentSharkEnemies > 0)
+	{
+		delete m_pSharkEnemies[m_iCurrentSharkEnemies - 1];
+		m_iCurrentSharkEnemies--;
+	}
+	while (m_iCurrentStarEnemies > 0)
+	{
+		delete m_pStarEnemies[m_iCurrentStarEnemies - 1];
+		m_iCurrentStarEnemies--;
+	}
+	while (m_iCurrentStoneEnemies > 0)
+	{
+		delete m_pStoneEnemies[m_iCurrentStoneEnemies - 1];
+		m_iCurrentStoneEnemies--;
+	}
+	while (m_iCurrentVolcanoEnemies > 0)
+	{
+		delete m_pVolcanoEnemies[m_iCurrentVolcanoEnemies-1];
+		m_iCurrentVolcanoEnemies--;
+	}
+	while (m_iCurrentVolcanoProjectiles > 0)
+	{
+		delete m_pVolcanoProjectiles[m_iCurrentVolcanoProjectiles - 1];
+		m_iCurrentVolcanoProjectiles--;
+	}
+}
